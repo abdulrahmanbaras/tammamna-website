@@ -1,3 +1,4 @@
+import { TOUCH_OR_SMALL } from '@/hooks/useMediaQuery';
 import {
   createContext,
   useCallback,
@@ -17,6 +18,32 @@ export const LOCALES: { code: Locale; label: string; nativeLabel: string; dir: D
 ];
 
 const STORAGE_KEY = 'tamamna:locale';
+
+/** Returns false when storage is unavailable — private mode, blocked cookies. */
+function persist(locale: Locale): boolean {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, locale);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Switching locale in place re-renders every component and flips `dir` on
+ * <html>, which invalidates style and layout for the whole document in one
+ * commit. On a phone that lands as a stall. Reloading does the same work from a
+ * clean slate and reads as faster, at the cost of returning to the top of the
+ * page — which is where a route change puts you anyway.
+ */
+function reloadsOnLocaleChange(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.matchMedia(TOUCH_OR_SMALL).matches;
+  } catch {
+    return false;
+  }
+}
 
 interface LocaleContextValue {
   locale: Locale;
@@ -54,26 +81,24 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     root.dataset.locale = locale;
   }, [locale, dir]);
 
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // Persistence is a convenience, not a requirement.
+  const apply = useCallback((next: Locale) => {
+    // The reload path depends on storage: the choice is read back on boot. If
+    // the write failed we would reload straight back into the old language, so
+    // fall through to switching in place instead.
+    const stored = persist(next);
+    if (stored && reloadsOnLocaleChange()) {
+      window.location.reload();
+      return;
     }
+    setLocaleState(next);
   }, []);
 
-  const toggleLocale = useCallback(() => {
-    setLocaleState((current) => {
-      const next: Locale = current === 'en' ? 'ar' : 'en';
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
+  const setLocale = useCallback((next: Locale) => apply(next), [apply]);
+
+  const toggleLocale = useCallback(
+    () => apply(locale === 'en' ? 'ar' : 'en'),
+    [apply, locale],
+  );
 
   const value = useMemo<LocaleContextValue>(
     () => ({ locale, dir, isRTL: dir === 'rtl', setLocale, toggleLocale }),
