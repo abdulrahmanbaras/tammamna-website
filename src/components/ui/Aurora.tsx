@@ -85,11 +85,15 @@ export function Aurora({ className, intensity = 'hero', interactive = true }: Au
       className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
       aria-hidden
     >
-      {/* Blur lives on this static wrapper so the filter is not re-evaluated per frame. */}
+      {/* The filter applies to this subtree's rendered output, so while the blobs
+          animate inside it the blur is recomputed every frame over an area 140% of
+          the hero — it cannot be cached. That is affordable on a desktop GPU and
+          is not on a phone, which is why the drift stops below `lg` (see the
+          `animated` prop) and the radius drops here. */}
       <div
         className="absolute inset-[-20%]"
         style={{
-          filter: `blur(${isHero ? 90 : 110}px)`,
+          filter: `blur(${small ? 55 : isHero ? 90 : 110}px)`,
           opacity: isHero ? 0.85 : 0.42,
         }}
       >
@@ -97,7 +101,7 @@ export function Aurora({ className, intensity = 'hero', interactive = true }: Au
           <AuroraBlob
             key={blob.color + index}
             blob={blob}
-            animated={!reduced}
+            animated={!reduced && !small}
             pointerX={pointerEnabled ? springX : null}
             pointerY={pointerEnabled ? springY : null}
           />
