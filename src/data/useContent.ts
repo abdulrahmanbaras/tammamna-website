@@ -212,14 +212,21 @@ function build(locale: Locale): Content {
   };
 }
 
-// Built once per locale at module load rather than per render — the merge is
-// pure and the result is shared by every component on the page.
-const bundles: Record<Locale, Content> = {
-  en: build('en'),
-  ar: build('ar'),
-};
+// Built once per locale and then shared by every component — the merge is pure,
+// so there is no reason to redo it per render. Built *lazily* rather than at
+// module load: an English visitor should not pay to merge the Arabic bundle
+// before first paint, and most visitors never switch.
+const bundles: Partial<Record<Locale, Content>> = {};
+
+function bundle(locale: Locale): Content {
+  const existing = bundles[locale];
+  if (existing) return existing;
+  const built = build(locale);
+  bundles[locale] = built;
+  return built;
+}
 
 export function useContent(): Content {
   const { locale } = useLocale();
-  return bundles[locale];
+  return bundle(locale);
 }

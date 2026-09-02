@@ -57,7 +57,7 @@ export function MobileMenu({ open, onClose, navItems }: MobileMenuProps) {
           {/* The menu picks up the live scroll accent rather than a fixed hue. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-60 transition-[background-image] duration-1000"
+            className="pointer-events-none absolute inset-0 opacity-60"
             style={{
               backgroundImage:
                 'radial-gradient(70% 45% at 100% 0%, color-mix(in srgb, var(--accent-a) 24%, transparent) 0%, transparent 65%), radial-gradient(60% 40% at 0% 100%, color-mix(in srgb, var(--accent-b) 20%, transparent) 0%, transparent 65%)',

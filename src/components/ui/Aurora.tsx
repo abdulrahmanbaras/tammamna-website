@@ -113,7 +113,7 @@ export function Aurora({ className, intensity = 'hero', interactive = true }: Au
             : 'radial-gradient(120% 100% at 50% 50%, rgba(5,5,5,0.25) 0%, #050505 80%)',
         }}
       />
-      <div className="grain absolute inset-0" />
+      <div className="grain absolute inset-0 hidden lg:block" />
     </div>
   );
 }
