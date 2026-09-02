@@ -226,6 +226,17 @@ function bundle(locale: Locale): Content {
   return built;
 }
 
+/**
+ * Merges the locale you are *not* using while the main thread is idle.
+ * Building both at module load charges every visitor for a bundle most never
+ * see; building purely on demand puts the whole merge inside the language
+ * switch, which is exactly where it is felt. This is neither.
+ */
+export function warmLocaleBundles() {
+  bundle('en');
+  bundle('ar');
+}
+
 export function useContent(): Content {
   const { locale } = useLocale();
   return bundle(locale);

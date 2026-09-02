@@ -68,7 +68,12 @@
     font-family: 'IBM Plex Sans Arabic', 'JetBrains Mono', ui-monospace, monospace;
   }
 
-  html[dir='rtl'] :is(.eyebrow, [class*='tracking-']) {
+  /* `*` rather than `[class*='tracking-']`: an attribute *substring* match has to
+     read and scan the class string of every element in the document, and it is
+     re-evaluated on every `dir` flip. The universal selector matches trivially
+     and then walks up to the root. Same result — all tracking is neutralised
+     under RTL — for far less work during the language switch. */
+  html[dir='rtl'] * {
     letter-spacing: 0 !important;
   }
 
