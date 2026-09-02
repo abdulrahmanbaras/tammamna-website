@@ -7,7 +7,6 @@ import { Logo } from './Logo';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useContent } from '@/data/useContent';
 import { useT } from '@/i18n/useT';
-import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import { EASE_EXPO } from '@/utils/motion';
 import { cn } from '@/utils/cn';
 
@@ -22,7 +21,6 @@ export function MobileMenu({ open, onClose, navItems }: MobileMenuProps) {
   const t = useT();
   const { company } = useContent();
   const secondary = useMemo(() => buildSecondaryNavItems(t), [t]);
-  useLockBodyScroll(open);
 
   useEffect(() => {
     if (!open) setExpanded(null);
@@ -40,7 +38,7 @@ export function MobileMenu({ open, onClose, navItems }: MobileMenuProps) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[70] lg:hidden"
+          className="fixed inset-0 z-[70] touch-none lg:hidden"
           initial="closed"
           animate="open"
           exit="closed"
@@ -84,7 +82,7 @@ export function MobileMenu({ open, onClose, navItems }: MobileMenuProps) {
               </div>
             </div>
 
-            <nav className="shell flex-1 overflow-y-auto py-8">
+            <nav className="shell flex-1 touch-pan-y overflow-y-auto overscroll-contain py-8">
               <ul className="flex flex-col">
                 {navItems.map((item, index) => (
                   <motion.li
