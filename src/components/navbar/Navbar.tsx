@@ -57,9 +57,9 @@ export function Navbar() {
       >
         <div
           className={cn(
-            'transition-[background-color,backdrop-filter,border-color] duration-500 ease-expo',
+            'transition-[background-color,border-color] duration-500 ease-expo',
             scrolled || openMenu
-              ? 'border-b border-white/[0.07] bg-ink-950/70 backdrop-blur-xl'
+              ? 'border-b border-white/[0.07] bg-ink-950/95 lg:bg-ink-950/70 lg:backdrop-blur-xl'
               : 'border-b border-transparent bg-transparent',
           )}
         >

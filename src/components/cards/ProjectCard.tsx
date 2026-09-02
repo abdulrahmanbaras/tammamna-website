@@ -57,7 +57,7 @@ export function ProjectCard({
           />
 
           <div className="absolute end-5 top-5 translate-y-2 opacity-0 transition-all duration-500 ease-expo group-hover:translate-y-0 group-hover:opacity-100">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink-950/70 px-3.5 py-1.5 text-[12px] text-chalk backdrop-blur-md">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink-950/90 px-3.5 py-1.5 text-[12px] text-chalk lg:bg-ink-950/70 lg:backdrop-blur-md">
               {t.common.viewCaseStudy}
               <ArrowUpRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
             </span>

@@ -49,7 +49,7 @@ export function Hero() {
         style={reduced ? undefined : { y: contentY, opacity: contentOpacity }}
       >
         <motion.div
-          className="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 backdrop-blur-sm"
+          className="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 lg:backdrop-blur-sm"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: EASE_EXPO }}

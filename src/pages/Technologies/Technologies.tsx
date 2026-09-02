@@ -184,7 +184,7 @@ export default function Technologies() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 90, opacity: 0 }}
             transition={{ duration: 0.45, ease: EASE_EXPO }}
-            className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.09] bg-ink-950/85 backdrop-blur-xl"
+            className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.09] bg-ink-950/95 lg:bg-ink-950/85 lg:backdrop-blur-xl"
           >
             <div className="shell flex items-center justify-between gap-6 py-4">
               <div className="flex min-w-0 items-center gap-4">
