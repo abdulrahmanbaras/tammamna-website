@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
-import { motion } from 'framer-motion';
+import { Fragment, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { EASE_EXPO } from '@/utils/motion';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { cn } from '@/utils/cn';
@@ -28,6 +28,13 @@ export function TextReveal({
   once = true,
 }: TextRevealProps) {
   const reduced = usePrefersReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  // Driving the reveal from `animate` rather than the `whileInView` gesture is
+  // what lets the copy change without remounting. A viewport gesture with `once`
+  // stops observing after it fires, so newly mounted word spans would never be
+  // told to show — that is what made headings vanish on a language switch. As a
+  // plain prop, `animate` still applies to children that mount later.
+  const inView = useInView(ref, { once, margin: '-10% 0px -10% 0px' });
   const Component = motion[as];
   const words = text.split(' ');
 
@@ -38,16 +45,10 @@ export function TextReveal({
 
   return (
     <Component
-      // Remount the whole reveal whenever the string changes — which is what a
-      // language switch does. `whileInView` with `once` stops observing after it
-      // fires, so the parent never re-runs; but the word spans are keyed by the
-      // word, so new copy remounts them with `initial="hidden"` and nothing is
-      // left to propagate "show". The heading would stay invisible until reload.
-      key={text}
+      ref={ref as never}
       className={cn(className)}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once, margin: '-10% 0px -10% 0px' }}
+      animate={inView ? 'show' : 'hidden'}
       transition={{ staggerChildren: stagger, delayChildren: delay }}
       aria-label={text}
     >
